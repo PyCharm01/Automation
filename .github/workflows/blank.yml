@@ -1,0 +1,25 @@
+name: Create Daily MLOps Repository
+
+on:
+  schedule:
+    - cron: '0 9 * * *'  # Run at 9 AM UTC daily
+
+jobs:
+  create-repo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository with scripts
+        uses: actions/checkout@v3
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          
+      - name: Install dependencies
+        run: pip install requests PyGithub
+        
+      - name: Create repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: python scripts/create_daily_repo.py
